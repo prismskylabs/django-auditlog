@@ -62,7 +62,7 @@ def model_instance_diff(old, new, **kwargs):
         if old_value == 'None' and new_value == '':
             continue
 
-        if old_value != new_value:
+        if cmp(old_value, new_value) != 0:
             diff[field.name] = (old_value, new_value)
 
     if len(diff) == 0:
