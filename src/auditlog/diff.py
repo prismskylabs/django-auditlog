@@ -62,6 +62,10 @@ def model_instance_diff(old, new, **kwargs):
         if old_value == 'None' and new_value == '':
             continue
 
+        # JSONield stores sets default to [] which can be ignored
+        if old_value == 'None' and new_value == []:
+            continue
+
         if cmp(old_value, new_value) != 0:
             diff[field.name] = (old_value, new_value)
 
