@@ -1,7 +1,7 @@
 import json
 
 from django.conf import settings
-from django.contrib.contenttypes import generic
+from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
@@ -170,9 +170,9 @@ class LogEntry(models.Model):
         return separator.join(substrings)
 
 
-class AuditlogHistoryField(generic.GenericRelation):
+class AuditlogHistoryField(GenericRelation):
     """
-    A subclass of django.contrib.contenttypes.generic.GenericRelation that sets some default variables. This makes it
+    A subclass of django.contrib.contenttypes.fields.GenericRelation that sets some default variables. This makes it
     easier to implement the audit log in models, and makes future changes easier.
 
     By default this field will assume that your primary keys are numeric, simply because this is the most common case.
