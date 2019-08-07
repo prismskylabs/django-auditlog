@@ -7,13 +7,13 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('auditlog', '0001_initial'),
+        ('auditlog', '0002_auto_support_long_primary_keys'),
     ]
 
     operations = [
-        migrations.AlterField(
+        migrations.AddField(
             model_name='logentry',
-            name='object_id',
-            field=models.BigIntegerField(db_index=True, null=True, verbose_name='object id', blank=True),
+            name='remote_addr',
+            field=models.GenericIPAddressField(null=True, verbose_name='remote address', blank=True),
         ),
     ]
