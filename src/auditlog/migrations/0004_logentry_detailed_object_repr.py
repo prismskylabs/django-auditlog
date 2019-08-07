@@ -22,10 +22,10 @@ class Migration(migrations.Migration):
             #  model_name='logentry',
             #  name='additional_data',
             #  field=jsonfield.fields.JSONField(null=True, blank=True),
+            # ),
             migrations.RenameField(
                         model_name='logentry',
-                        old_name='oldname',
-                        new_name='newname',
+                        old_name='detailed_object_repr',
+                        new_name='additional_data',
                        ),
-        ),
     ]

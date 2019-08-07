@@ -10,9 +10,9 @@ class AuditlogModelRegistry(object):
     A registry that keeps track of the models that use Auditlog to track changes.
     """
     def __init__(self, create=True, update=True, delete=True, custom=None):
-       from auditlog.receivers import log_create, log_update, log_delete
+        from auditlog.receivers import log_create, log_update, log_delete
 
-        self._registry = set()
+        self._registry = {}
         self._signals = {}
 
         if create:
@@ -107,7 +107,7 @@ class AuditlogModelRegistry(object):
         """
         return (self.__class__, model, signal)
 
-   def get_model_fields(self, model):
+    def get_model_fields(self, model):
         return {
             'include_fields': self._registry[model]['include_fields'],
             'exclude_fields': self._registry[model]['exclude_fields'],
