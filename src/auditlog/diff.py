@@ -95,6 +95,7 @@ def model_instance_diff(old, new):
              as value.
     :rtype: dict
     """
+    from auditlog.registry import auditlog
 
     if not(old is None or isinstance(old, Model)):
         raise TypeError("The supplied old instance is not a valid model instance.")
@@ -127,7 +128,7 @@ def model_instance_diff(old, new):
         if old_value == 'None' and new_value == '[]':
             continue
 
-        if cmp(old_value, new_value) != 0:
+        if not old_value == new_value:
             diff[field.name] = (smart_text(old_value), smart_text(new_value))
 
     if len(diff) == 0:
