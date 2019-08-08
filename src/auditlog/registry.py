@@ -108,11 +108,18 @@ class AuditlogModelRegistry(object):
         return (self.__class__, model, signal)
 
     def get_model_fields(self, model):
+        if model in self._registry:
+            return {
+                'include_fields': self._registry[model]['include_fields'],
+                'exclude_fields': self._registry[model]['exclude_fields'],
+                'mapping_fields': self._registry[model]['mapping_fields'],
+            }
         return {
-            'include_fields': self._registry[model]['include_fields'],
-            'exclude_fields': self._registry[model]['exclude_fields'],
-            'mapping_fields': self._registry[model]['mapping_fields'],
-        }
+                'include_fields': [],
+                'exclude_fields': [],
+                'mapping_fields': [],
+                }
+ }
 
 
 class AuditLogModelRegistry(AuditlogModelRegistry):
