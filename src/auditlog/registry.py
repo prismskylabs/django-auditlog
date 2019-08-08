@@ -119,7 +119,6 @@ class AuditlogModelRegistry(object):
                 'exclude_fields': [],
                 'mapping_fields': [],
                 }
- }
 
 
 class AuditLogModelRegistry(AuditlogModelRegistry):
