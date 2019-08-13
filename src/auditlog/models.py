@@ -59,6 +59,10 @@ class LogEntryManager(models.Manager):
                     self.filter(content_type=kwargs.get('content_type'), object_pk=kwargs.get('object_pk', '')).delete()
             # save LogEntry to same database instance is using
             db = instance._state.db
+            if ( hasattr(settings, AUDITLOG_SAVE_LOG_IN_SAME_DB) and
+                 not settings.AUDITLOG_SAVE_LOG_IN_SAME_DB ):
+                db = None  # Skip saving to model specific db if we said so
+
             return self.create(**kwargs) if db is None or db == '' else self.using(db).create(**kwargs)
         return None
 
