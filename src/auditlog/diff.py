@@ -1,5 +1,5 @@
 from __future__ import unicode_literals
-
+import json
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Model, NOT_PROVIDED, DateTimeField
@@ -75,17 +75,19 @@ def get_field_value(obj, field):
             value = field.default if field.default is not NOT_PROVIDED else None
     elif isinstance(desc, str) and desc == "JSON object":
         value = getattr(obj, field.name, None)
-        if value != None and isinstance(value, str) and value != '' :
+        if isinstance(value, dict):
+            pass
+        elif isinstance(value, str):
             try:
                 value = json.loads(value)
             except Exception:
-                value = smart_text(value)
-        elif not isinstance(value, dict):
+                pass
+        else:
             value = smart_text(value)
     else:
         try:
             val = getattr(obj, field.name, None)
-            value = smart_text(val) if type(val) is not dict else val
+            value = smart_text(val)
         except ObjectDoesNotExist:
             value = field.default if field.default is not NOT_PROVIDED else None
 
@@ -135,14 +137,14 @@ def model_instance_diff(old, new):
             continue
 
         # JSONield stores sets default to '[]' which can be ignored
-        if old_value == 'None' and new_value == '[]':
+        if old_value == 'None' and new_value in [ '[]', [], '{}', {} ] :
             continue
-        if old_value == None and new_value == []:
-            continue
-
 
         if not old_value == new_value:
-            diff[field.name] = (smart_text(old_value), smart_text(new_value))
+            if isinstance(old_value, dict) and isinstance(new_value, dict):
+                diff[field.name] = (old_value, new_value)
+            else:
+                diff[field.name] = (smart_text(old_value), smart_text(new_value))
 
     if len(diff) == 0:
         diff = None
