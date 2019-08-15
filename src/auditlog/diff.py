@@ -76,7 +76,10 @@ def get_field_value(obj, field):
     elif isinstance(desc, str) and desc == "JSON object":
         value = getattr(obj, field.name, None)
         if value != None and isinstance(value, str) and value != '' :
-            value = json.loads(value)
+            try:
+                value = json.loads(value)
+            except Exception:
+                value = smart_text(value)
         elif not isinstance(value, dict):
             value = smart_text(value)
     else:
