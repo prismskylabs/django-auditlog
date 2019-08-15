@@ -63,6 +63,7 @@ def get_field_value(obj, field):
     :return: The value of the field as a string.
     :rtype: str
     """
+    desc =  getattr(field, 'description', None) 
     if isinstance(field, DateTimeField):
         # DateTimeFields are timezone-aware, so we need to convert the field
         # to its naive form before we can accuratly compare them for changes.
@@ -72,6 +73,12 @@ def get_field_value(obj, field):
                 value = timezone.make_naive(value, timezone=timezone.utc)
         except ObjectDoesNotExist:
             value = field.default if field.default is not NOT_PROVIDED else None
+    elif isinstance(desc, str) and desc == "JSON object":
+        value = getattr(obj, field.name, None)
+        if value != None and isinstance(value, str) and value != '' :
+            value = json.loads(value)
+        elif not isinstance(value, dict):
+            value = smart_text(value)
     else:
         try:
             val = getattr(obj, field.name, None)
@@ -127,6 +134,9 @@ def model_instance_diff(old, new):
         # JSONield stores sets default to '[]' which can be ignored
         if old_value == 'None' and new_value == '[]':
             continue
+        if old_value == None and new_value == []:
+            continue
+
 
         if not old_value == new_value:
             diff[field.name] = (smart_text(old_value), smart_text(new_value))
